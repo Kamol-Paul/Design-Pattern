@@ -1,7 +1,5 @@
 package Assignment5ProxyPattern;
 
-import java.util.Scanner;
-
 public class AdminUser {
     public static void main(String[] args) {
         System.out.println(ProxyClass.getWarehouseList().size());
