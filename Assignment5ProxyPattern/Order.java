@@ -3,21 +3,13 @@ package Assignment5ProxyPattern;
 import java.util.ArrayList;
 import java.util.List;
 public class Order {
-    private final List<ItemOrder> items;
+    public final List<Item> itemList;
     public Order(){
-        items = new ArrayList<>();
+        itemList = new ArrayList<>();
 
     }
-    public void addItem(Item item, int quantity){
-        if(quantity <=0) {
-            System.out.println("invalid quantity");
-        }else {
-            System.out.println("Item Successfully added.");
-            items.add(new ItemOrder(item, quantity));
-        }
-    }
-    public List<ItemOrder> getItems() {
-        return items;
+    public void addItem(Item item){
+       itemList.add(item);
     }
 
 

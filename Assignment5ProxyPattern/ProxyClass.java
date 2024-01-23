@@ -12,37 +12,14 @@ public class ProxyClass implements IOrder{
     public static void addWarehouse(WarHouse warHouse){
         warehouseList.add(warHouse);
     }
-    public static List<WarHouse> getWarehouseList(){
-        return warehouseList;
-    }
     @Override
-    public Hashtable<String, Integer> fullFillOrder(Order order) {
-        Hashtable<String, Integer> sellItem = new Hashtable<>();
-        for (ItemOrder itemOrder : order.getItems()) {
-            for(WarHouse  warHouse : warehouseList){
-                int currentStock = warHouse.currentInventory(itemOrder.getItem().getName());
-                if(currentStock >= itemOrder.getQuantity()){
-                    if(sellItem.containsKey(itemOrder.getItem().getName())){
-                        sellItem.put(itemOrder.getItem().getName(), sellItem.get(itemOrder.getItem().getName()) + itemOrder.getQuantity());
-                        warHouse.removeStock(itemOrder.getItem().getName(), itemOrder.getQuantity());
-                    }else{
-                        sellItem.put(itemOrder.getItem().getName(), itemOrder.getQuantity());
-                        warHouse.removeStock(itemOrder.getItem().getName(), itemOrder.getQuantity());
-                    }
-                    itemOrder.setQuantity(0);
-                    break;
-                }else{
-                    itemOrder.setQuantity(itemOrder.getQuantity() -currentStock);
-                    if(sellItem.containsKey(itemOrder.getItem().getName())){
-                        sellItem.put(itemOrder.getItem().getName(), sellItem.get(itemOrder.getItem().getName()) + currentStock);
-                    }else{
-                        sellItem.put(itemOrder.getItem().getName(), currentStock);
-                    }
-                    warHouse.removeStock(itemOrder.getItem().getName(), currentStock);
-
-                }
-            }
-        }
-        return sellItem;
+    public void fullFillOrder(Order order) {
+       for(WarHouse warHouse : warehouseList){
+           warHouse.fullFillOrder(order);
+           if(order.itemList.isEmpty()) return;
+       }
+       for(Item item : order.itemList){
+           System.out.println(item.sku + " is not available any warehouse.");
+       }
     }
 }

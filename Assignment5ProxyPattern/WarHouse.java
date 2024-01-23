@@ -1,77 +1,42 @@
 package Assignment5ProxyPattern;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class WarHouse implements IOrder, Admin {
+public class WarHouse implements IOrder{
     private final Hashtable<String, Integer> stocks;
-    private String address;
-    private String phone;
-    private String email;
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setAddress(String address) {
+    private final String address;
+    public WarHouse(String address) {
+        stocks = new Hashtable<>();
         this.address = address;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public WarHouse() {
-        stocks = new Hashtable<>();
-    }
-
     @Override
-    public Hashtable<String, Integer> fullFillOrder(Order order) {
-        Hashtable<String, Integer> sellItem = new Hashtable<>();
-        for (ItemOrder itemOrder : order.getItems()) {
-            int x = this.removeStock(itemOrder.getItem().getName(), itemOrder.getQuantity());
-            sellItem.put(itemOrder.getItem().getName(), x);
+    public void fullFillOrder(Order order) {
+        ArrayList<Item> sold = new ArrayList<>();
+        for (Item item : order.itemList) {
+            if(currentInventory(item) > 0){
+                System.out.println(item.sku + " have bought from " + address);
+                sold.add(item);
+
+            }
         }
-        return sellItem;
+        order.itemList.removeAll(sold);
     }
 
-    public void addStock(String itemName, int quantity) {
-        if (stocks.containsKey(itemName)) {
-            stocks.put(itemName, stocks.get(itemName) + quantity);
+    public void addStock(Item item, int quantity) {
+        if (stocks.containsKey(item.sku)) {
+            stocks.put(item.sku, stocks.get(item.sku) + quantity);
         } else {
-            stocks.put(itemName, quantity);
+            stocks.put(item.sku, quantity);
         }
 
     }
 
-    int currentInventory(String itemName) {
-        if (!stocks.containsKey(itemName)) {
+    int currentInventory(Item item) {
+        if (!stocks.containsKey(item.sku)) {
             return 0;
         }
-        return stocks.get(itemName);
-    }
-
-    int removeStock(String itemName, int quantity) {
-        if (!stocks.containsKey(itemName)) {
-            return 0;
-        }
-        int current = stocks.get(itemName);
-        if (current < quantity) {
-            return 0;
-        }
-        stocks.put(itemName, current - quantity);
-        return quantity;
-
+        return stocks.get(item.sku);
     }
 }
